@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import DiffModeSelect from "./DiffModeSelect";
+import SelectMenu from "./SelectMenu";
+import LanguageComboBox from "./LanguageComboBox";
 
 const defaultJSON = `{
   "timestamp": "2022-09-11T11:35:44+07:00",
@@ -32,7 +33,8 @@ const MonacoEditor = () => {
     <div className="w-full flex flex-col h-70">
       <div className="w-full mb-4 flex flex-row justify-between items-end">
         <div className="flex flex-row gap-2">
-          <DiffModeSelect/>
+          <SelectMenu/>
+          <LanguageComboBox/>
         </div>
         <div className="flex flex-row gap-2">
           <CustomButton>Swap</CustomButton>
