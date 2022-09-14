@@ -98,7 +98,7 @@ const MonacoEditor = () => {
         height="70vh"
         width="100%"
         language={selectedLanguage.name}
-        theme="vs-light"
+        theme="vs-dark"
         onMount={handleEditorDidMount}
         original={diffObj.left}
         modified={diffObj.right}
@@ -119,7 +119,7 @@ const MonacoEditor = () => {
 
 const CustomButton = ({children, handleOnClick}) => {
   return (
-    <button className="px-2.5 py-1 text-xs rounded text-white bg-[#1a1523] hover:bg-[#e38ec3]" onClick={handleOnClick}>
+    <button className="px-2.5 py-1 text-xs rounded text-white bg-[#1a1523] customBtn" onClick={handleOnClick}>
       {children}
     </button>
   )
