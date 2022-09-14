@@ -24,10 +24,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function LanguageComboBox() {
+export default function LanguageComboBox({selectedLanguage, setSelectedLanguage}) {
   const [query, setQuery] = useState('')
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[0])
-
+  
   const filteredLanguages =
     query === ''
       ? languages
