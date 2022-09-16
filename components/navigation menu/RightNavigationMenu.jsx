@@ -181,7 +181,6 @@ const StyledViewport = styled(NavigationMenuPrimitive.Viewport, {
   },
 });
 
-// Exports
 const NavigationMenu = StyledMenu;
 const NavigationMenuList = StyledList;
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
@@ -191,7 +190,6 @@ const NavigationMenuContent = StyledContent;
 const NavigationMenuViewport = StyledViewport;
 const NavigationMenuIndicator = StyledIndicatorWithArrow;
 
-// Your app...
 const ContentList = styled('ul', {
   display: 'grid',
   padding: 22,
@@ -281,7 +279,7 @@ const ContentListItemCallout = React.forwardRef(({ children, ...props }, forward
           marginBottom: 7,
         }}
       >
-        Radix Primitives
+        Proxyman
       </LinkTitle>
       <LinkText
         css={{
@@ -290,7 +288,7 @@ const ContentListItemCallout = React.forwardRef(({ children, ...props }, forward
           lineHeight: 1.3,
         }}
       >
-        Unstyled, accessible components for React.
+        Modern, native web debugging proxy.
       </LinkText>
     </NavigationMenuLink>
   </ListItem>
@@ -312,47 +310,48 @@ export const RightNavigationMenu = () => {
   return (
     <NavigationMenu>
       <NavigationMenuList>
+
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Learn</NavigationMenuTrigger>
+          <NavigationMenuTrigger>About us</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="one">
               <ContentListItemCallout />
-              <ContentListItem href="https://stitches.dev/" title="Stitches">
-                CSS-in-JS with best-in-class developer experience.
+              <ContentListItem href="https://proxyman.io/" title="Proxyman for macOS">
+              Native, high-performance macOS app to capture and manipulate HTTP(s) requests/ responses.
               </ContentListItem>
-              <ContentListItem href="/colors" title="Colors">
-                Beautiful, thought-out palettes with auto dark mode.
+              <ContentListItem href="https://proxyman.io/ios" title="Proxyman for iOS">
+              Directly inspect HTTP/ HTTPS traffic from iOS devices with ease.
               </ContentListItem>
-              <ContentListItem href="https://icons.radix-ui.com/" title="Icons">
-                A crisp set of 15x15 icons, balanced and consistent.
+              <ContentListItem href="https://proxyman.io/windows" title="Proxyman for WindowOS">
+              Modern, intuitive Windows app to capture and inspect HTTP(s) requests/ responses.
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Overview</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
-              <ContentListItem title="Introduction" href="/docs/primitives/overview/introduction">
+              <ContentListItem title="Prettify JSON" href="/docs/primitives/overview/introduction">
                 Build high-quality, accessible design systems and web apps.
               </ContentListItem>
               <ContentListItem
-                title="Getting started"
+                title="URL Parser"
                 href="/docs/primitives/overview/getting-started"
               >
                 A quick tutorial to get you up and running with Radix Primitives.
               </ContentListItem>
-              <ContentListItem title="Styling" href="/docs/primitives/overview/styling">
+              <ContentListItem title="JWT Debugger" href="/docs/primitives/overview/styling">
                 Unstyled and compatible with any styling solution.
               </ContentListItem>
-              <ContentListItem title="Animation" href="/docs/primitives/overview/animation">
+              <ContentListItem title="Base64 String Encode/ Decode" href="/docs/primitives/overview/animation">
                 Use CSS keyframes or any animation library of your choice.
               </ContentListItem>
-              <ContentListItem title="Accessibility" href="/docs/primitives/overview/accessibility">
+              <ContentListItem title="URL Encode/ Decode" href="/docs/primitives/overview/accessibility">
                 Tested in a range of browsers and assistive technologies.
               </ContentListItem>
-              <ContentListItem title="Releases" href="/docs/primitives/overview/releases">
+              <ContentListItem title="Syntax Highlighting" href="/docs/primitives/overview/releases">
                 Radix Primitives releases and their changelogs.
               </ContentListItem>
             </ContentList>
@@ -360,7 +359,7 @@ export const RightNavigationMenu = () => {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuLink href="https://github.com/radix-ui">Github</NavigationMenuLink>
+          <NavigationMenuLink href="https://github.com/ProxymanApp/quick-diff">Github</NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuIndicator />
