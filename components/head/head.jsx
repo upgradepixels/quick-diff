@@ -48,9 +48,11 @@ const MainHead = () => {
         property="og:description"
         content="Quick Diff is a privacy-first web app that compares two input texts and finds differences. Support diff with different file formats, better Syntax Highlighter, and various diffing modes, such as Side by Side, and Inline mode."
       />
+      <meta property="og:image:width" content="2760"></meta>
+      <meta property="og:image:height" content="1500"></meta>
       <meta
         property="og:image"
-        content="https://proxyman.io/assets/images/twitter_banner_v2.png"
+        content="https://quick-diff.com/quick-diff-thumbnail.png"
       />
       <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8"></meta>
       <meta httpEquiv="Content-Language" content="en"></meta>
