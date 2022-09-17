@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import NavigationMenu from "../components/navigation menu/NavigationMenu";
 import Footer from "../components/footer/Footer";
+import MainHead from "../components/head/head";
 
 const MonacoEditorWithNoSSR = dynamic(
   () => import("../components/editor/MonacoEditor"),
@@ -10,8 +11,7 @@ const MonacoEditorWithNoSSR = dynamic(
 export default function Home() {
   return (
     <div>
-      
-
+      <MainHead></MainHead>
       <div
         className="h-screen w-screen overflow-hidden px-10 pt-4"
         style={{
