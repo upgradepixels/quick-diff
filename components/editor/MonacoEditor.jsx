@@ -8,10 +8,10 @@ const PANEL = {
   RIGHT: "right",
 };
 
-const DIFF_MODE = {
-  SIDE_BY_SIDE: "side-by-side",
-  INLINE: "inline",
-};
+const diffModes = [
+  { id: 1, mode: "Side by Side" },
+  { id: 2, mode: "Inline" },
+];
 
 const defaultLeft = `{
   "timestamp": "2022-09-11T11:35:44+07:00",
@@ -38,12 +38,11 @@ const MonacoEditor = () => {
   const [showDiffEditor, setShowDiffEditor] = useState(false);
 
   const [diffConfig, setDiffConfig] = useState({
-    diffMode: DIFF_MODE.SIDE_BY_SIDE,
-    language: {
-      id: 1,
-      name: "json",
-    },
+    diffMode: diffModes[0],
+    language: { id: 1, name: "json" },
   });
+
+  const [selectedDiffMode, setSelectedDiffMode] = useState(diffModes[0]);
 
   const handleShowDiff = () => {
     setShowDiffEditor((prev) => !prev);
@@ -52,7 +51,6 @@ const MonacoEditor = () => {
       right: rightInput,
     });
   };
-
 
   const handleClipboard = async (panel) => {
     const text = await navigator.clipboard.readText();
@@ -96,10 +94,10 @@ const MonacoEditor = () => {
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full mb-4 flex flex-row justify-between items-end">
+    <div className="w-full flex flex-col gap-4">
+      <div className="w-full flex flex-row justify-between items-end">
         <div className="flex flex-row">
-          <SelectMenu />
+          <SelectMenu selected={selectedDiffMode} setSelected={setSelectedDiffMode} diffModes={diffModes}/>
         </div>
         <div className="flex flex-row">
           <CTAButton handleOnClick={() => handleShowDiff()}>
@@ -113,12 +111,13 @@ const MonacoEditor = () => {
           <DiffEditor
             width="100%"
             language={diffConfig.language.name}
-            theme="vs-light"
+            theme="vs-dark"
             original={diffObj.left}
             modified={diffObj.right}
             style={{
               height: "100%",
             }}
+            options={{renderSideBySide: selectedDiffMode.id === 1}}
           />
         </div>
       ) : (
@@ -178,7 +177,7 @@ const InputEditor = ({
   return (
     <div className="flex flex-col w-1/2 h-full">
       <Editor
-        theme="vs-light"
+        theme="vs-dark"
         language={language}
         value={value}
         onChange={onChange}
@@ -186,7 +185,7 @@ const InputEditor = ({
           height: "100%",
         }}
       />
-      <div className="flex flex-row gap-2 mt-2" style={styling}>
+      <div className="flex flex-row gap-2 mt-4" style={styling}>
         <CustomButton handleOnClick={handleClipboard}>Clipboard</CustomButton>
         <CustomButton handleOnClick={handleClear}>Clear</CustomButton>
       </div>

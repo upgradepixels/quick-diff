@@ -2,18 +2,11 @@ import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-const diffModes = [
-  { id: 1, mode: "Side by Side" },
-  { id: 2, mode: "Inline" },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function SelectMenu() {
-  const [selected, setSelected] = useState(diffModes[0]);
-
+export default function SelectMenu({ selected, setSelected, diffModes}) {
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
