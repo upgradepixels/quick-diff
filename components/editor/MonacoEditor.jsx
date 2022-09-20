@@ -30,17 +30,12 @@ const MonacoEditor = () => {
   const [leftInput, setLeftInput] = useState(defaultLeft);
   const [rightInput, setRightInput] = useState(defaultRight);
 
-  const [diffObj, setCode] = useState({
+  const [diffObj, setDiffObj] = useState({
     left: defaultLeft,
     right: defaultRight,
   });
 
   const [showDiffEditor, setShowDiffEditor] = useState(false);
-
-  // const [selectedLanguage, setSelectedLanguage] = useState({
-  //   id: 1,
-  //   name: "json",
-  // });
 
   const [diffConfig, setDiffConfig] = useState({
     diffMode: DIFF_MODE.SIDE_BY_SIDE,
@@ -50,41 +45,24 @@ const MonacoEditor = () => {
     },
   });
 
-  const editorRef = useRef(null);
-
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
-  }
-
-  const handleFindDiff = () => {
+  const handleShowDiff = () => {
     setShowDiffEditor((prev) => !prev);
-  };
-
-  const handleSwap = () => {
-    console.log("Swap Button On Clicked", diffObj);
-    setCode({
-      left: diffObj.right,
-      right: diffObj.left,
+    setDiffObj({
+      left: leftInput,
+      right: rightInput,
     });
   };
 
-  const handleClearAll = () => {
-    console.log("Clear All Button On Clicked", diffObj);
-    setCode({
-      left: "",
-      right: "",
-    });
-  };
 
   const handleClipboard = async (panel) => {
     const text = await navigator.clipboard.readText();
-    console.log("Clipboard Button On Clicked", text);
+
     switch (panel) {
       case PANEL.LEFT:
-        setCode({ ...diffObj, left: text });
+        setLeftInput(text);
         break;
       case PANEL.RIGHT:
-        setCode({ ...diffObj, right: text });
+        setRightInput(text);
         break;
       default:
         break;
@@ -94,10 +72,23 @@ const MonacoEditor = () => {
   const handleClear = (panel) => {
     switch (panel) {
       case PANEL.LEFT:
-        setCode({ ...diffObj, left: "" });
+        setLeftInput("");
         break;
       case PANEL.RIGHT:
-        setCode({ ...diffObj, right: "" });
+        setRightInput("");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleInputChange = (panel, value) => {
+    switch (panel) {
+      case PANEL.LEFT:
+        setLeftInput(value);
+        break;
+      case PANEL.RIGHT:
+        setRightInput(value);
         break;
       default:
         break;
@@ -111,7 +102,7 @@ const MonacoEditor = () => {
           <SelectMenu />
         </div>
         <div className="flex flex-row">
-          <CTAButton handleOnClick={() => handleFindDiff()}>
+          <CTAButton handleOnClick={() => handleShowDiff()}>
             {showDiffEditor ? "Edit input" : "Show difference"}
           </CTAButton>
         </div>
@@ -123,7 +114,6 @@ const MonacoEditor = () => {
             width="100%"
             language={diffConfig.language.name}
             theme="vs-light"
-            onMount={handleEditorDidMount}
             original={diffObj.left}
             modified={diffObj.right}
             style={{
@@ -134,11 +124,19 @@ const MonacoEditor = () => {
       ) : (
         <div className="flex flex-row w-full editorContainer">
           <InputEditor
-            value={defaultLeft}
+            value={leftInput}
+            onChange={(value) => handleInputChange(PANEL.LEFT, value)}
+            handleClipboard={() => handleClipboard(PANEL.LEFT)}
+            handleClear={() => handleClear(PANEL.LEFT)}
+            language={diffConfig.language.name}
             styling={{ justifyContent: "flex-start" }}
           />
           <InputEditor
-            value={defaultRight}
+            value={rightInput}
+            onChange={(value) => handleInputChange(PANEL.RIGHT, value)}
+            handleClipboard={() => handleClipboard(PANEL.RIGHT)}
+            handleClear={() => handleClear(PANEL.RIGHT)}
+            language={diffConfig.language.name}
             styling={{ justifyContent: "flex-end" }}
           />
         </div>
@@ -150,7 +148,7 @@ const MonacoEditor = () => {
 const CustomButton = ({ children, handleOnClick }) => {
   return (
     <button
-      className="w-20 h-6 text-xs rounded text-white bg-[#1a1523] customBtn"
+      className="px-2.5 h-6 text-xs rounded text-white bg-[#1a1523] customBtn"
       onClick={handleOnClick}
     >
       {children}
@@ -174,14 +172,15 @@ const InputEditor = ({
   onChange,
   handleClipboard,
   handleClear,
+  language,
   styling,
 }) => {
   return (
     <div className="flex flex-col w-1/2 h-full">
       <Editor
         theme="vs-light"
-        defaultLanguage="json"
-        defaultValue={value}
+        language={language}
+        value={value}
         onChange={onChange}
         style={{
           height: "100%",
