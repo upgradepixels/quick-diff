@@ -54,7 +54,6 @@ const MonacoEditor = () => {
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
-    console.log("editorRef", editorRef);
   }
 
   const handleFindDiff = () => {
