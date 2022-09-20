@@ -10,15 +10,9 @@ const MonacoEditorWithNoSSR = dynamic(
 
 export default function Home() {
   return (
-    <div>
+    <div className="h-screen w-screen">
       <MainHead></MainHead>
-      <div
-        className="h-screen w-screen overflow-hidden px-10 pt-4"
-        style={{
-          backgroundImage:
-            "linear-gradient(to bottom, hsl(210, 16.7%, 97.6%), hsl(206, 20.0%, 98.8%))",
-        }}
-      >
+      <div className="w-full h-full px-10">
         <NavigationMenu />
         <MonacoEditorWithNoSSR />
         <Footer />

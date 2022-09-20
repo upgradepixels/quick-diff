@@ -1,17 +1,19 @@
 import React, { useState, useRef } from "react";
-import Editor, { DiffEditor } from "@monaco-editor/react";
-import SelectMenu from "./SelectMenu";
-import LanguageComboBox from "./LanguageComboBox";
-
-const PANEL = {
-  LEFT: "left",
-  RIGHT: "right",
-};
+import { DiffEditor } from "@monaco-editor/react";
+import DiffModeMenu from "./DiffModeMenu";
+import InputEditor from "./InputEditor";
+import CTAButton from "../button/CTAButton";
+import { PANEL, DIFF_MODE, LANGUAGE } from "../../utils/Constants";
 
 const diffModes = [
-  { id: 1, mode: "Side by Side" },
-  { id: 2, mode: "Inline" },
+  { id: 1, mode: DIFF_MODE.SIDE_BY_SIDE },
+  { id: 2, mode: DIFF_MODE.INLINE },
 ];
+
+const defaultLanguage = {
+  id: 1,
+  name: LANGUAGE.JSON,
+}
 
 const defaultLeft = `{
   "timestamp": "2022-09-11T11:35:44+07:00",
@@ -39,7 +41,7 @@ const MonacoEditor = () => {
 
   const [diffConfig, setDiffConfig] = useState({
     diffMode: diffModes[0],
-    language: { id: 1, name: "json" },
+    language: defaultLanguage,
   });
 
   const [selectedDiffMode, setSelectedDiffMode] = useState(diffModes[0]);
@@ -53,14 +55,14 @@ const MonacoEditor = () => {
   };
 
   const handleClipboard = async (panel) => {
-    const text = await navigator.clipboard.readText();
+    const textInput = await navigator.clipboard.readText();
 
     switch (panel) {
       case PANEL.LEFT:
-        setLeftInput(text);
+        setLeftInput(textInput);
         break;
       case PANEL.RIGHT:
-        setRightInput(text);
+        setRightInput(textInput);
         break;
       default:
         break;
@@ -97,7 +99,7 @@ const MonacoEditor = () => {
     <div className="w-full flex flex-col gap-4">
       <div className="w-full flex flex-row justify-between items-end">
         <div className="flex flex-row">
-          <SelectMenu selected={selectedDiffMode} setSelected={setSelectedDiffMode} diffModes={diffModes}/>
+          <DiffModeMenu selected={selectedDiffMode} setSelected={setSelectedDiffMode} diffModes={diffModes}/>
         </div>
         <div className="flex flex-row">
           <CTAButton handleOnClick={() => handleShowDiff()}>
@@ -109,15 +111,21 @@ const MonacoEditor = () => {
       {showDiffEditor ? (
         <div className="w-full editorContainer">
           <DiffEditor
-            width="100%"
+            className="w-full h-full border border-gray-200 shadow-md"
             language={diffConfig.language.name}
-            theme="vs-dark"
+            theme="vs-light"
             original={diffObj.left}
             modified={diffObj.right}
-            style={{
-              height: "100%",
+            options={{
+              renderSideBySide: selectedDiffMode.mode === DIFF_MODE.SIDE_BY_SIDE,
+              scrollbar: {
+                horizontalScrollbarSize: 8,
+                verticalScrollbarSize: 8,
+              },
+              readOnly: true,
+              diffWordWrap: "on",
+              scrollBeyondLastLine: false,
             }}
-            options={{renderSideBySide: selectedDiffMode.id === 1}}
           />
         </div>
       ) : (
@@ -130,6 +138,7 @@ const MonacoEditor = () => {
             language={diffConfig.language.name}
             styling={{ justifyContent: "flex-start" }}
           />
+          <div className="w-4"></div>
           <InputEditor
             value={rightInput}
             onChange={(value) => handleInputChange(PANEL.RIGHT, value)}
@@ -140,55 +149,6 @@ const MonacoEditor = () => {
           />
         </div>
       )}
-    </div>
-  );
-};
-
-const CustomButton = ({ children, handleOnClick }) => {
-  return (
-    <button
-      className="px-2.5 h-6 text-xs rounded text-white bg-[#1a1523] customBtn"
-      onClick={handleOnClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-const CTAButton = ({ children, handleOnClick }) => {
-  return (
-    <button
-      className="px-2.5 h-8 text-[14px] rounded text-white ctaBtn"
-      onClick={handleOnClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-const InputEditor = ({
-  value,
-  onChange,
-  handleClipboard,
-  handleClear,
-  language,
-  styling,
-}) => {
-  return (
-    <div className="flex flex-col w-1/2 h-full">
-      <Editor
-        theme="vs-dark"
-        language={language}
-        value={value}
-        onChange={onChange}
-        style={{
-          height: "100%",
-        }}
-      />
-      <div className="flex flex-row gap-2 mt-4" style={styling}>
-        <CustomButton handleOnClick={handleClipboard}>Clipboard</CustomButton>
-        <CustomButton handleOnClick={handleClear}>Clear</CustomButton>
-      </div>
     </div>
   );
 };

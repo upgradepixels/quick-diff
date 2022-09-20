@@ -38,7 +38,7 @@
   }
 
   .editorContainer {
-    height: calc(100vh - 200px);
+    height: calc(100vh - 220px);
   }
 }
 
@@ -64,7 +64,8 @@ a {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    color: black;
+    background-image:
+            linear-gradient(to bottom, hsl(210, 16.7%, 97.6%), hsl(206, 20.0%, 98.8%));
   }
 }
