@@ -32,6 +32,14 @@
   .customBtn:hover {
     background: linear-gradient(304deg, rgba(140,79,199,1) 0%, rgba(101,90,210,1) 60%, rgba(70,98,220,1) 100%);
   }
+
+  .ctaBtn {
+    background: linear-gradient(304deg, rgba(140,79,199,1) 0%, rgba(101,90,210,1) 60%, rgba(70,98,220,1) 100%);
+  }
+
+  .editorContainer {
+    height: calc(100vh - 200px);
+  }
 }
 
 html,
