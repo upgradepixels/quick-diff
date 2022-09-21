@@ -1,12 +1,19 @@
 import React, { useState, useRef } from "react";
 import { DiffEditor } from "@monaco-editor/react";
-import SelectMenu from "./SelectMenu";
-import LanguageComboBox from "./LanguageComboBox";
+import DiffModeMenu from "./DiffModeMenu";
+import InputEditor from "./InputEditor";
+import CTAButton from "../button/CTAButton";
+import { PANEL, DIFF_MODE, LANGUAGE } from "../../utils/Constants";
 
-const PANEL = {
-  LEFT: "left",
-  RIGHT: "right",
-};
+const diffModes = [
+  { id: 1, mode: DIFF_MODE.SIDE_BY_SIDE },
+  { id: 2, mode: DIFF_MODE.INLINE },
+];
+
+const defaultLanguage = {
+  id: 1,
+  name: LANGUAGE.JSON,
+}
 
 const defaultLeft = `{
   "timestamp": "2022-09-11T11:35:44+07:00",
@@ -22,106 +29,128 @@ const defaultRight = `{
 }`;
 
 const MonacoEditor = () => {
-  const [diffObj, setCode] = useState({
+  const [leftInput, setLeftInput] = useState(defaultLeft);
+  const [rightInput, setRightInput] = useState(defaultRight);
+
+  const [diffObj, setDiffObj] = useState({
     left: defaultLeft,
     right: defaultRight,
   });
 
-  const [selectedLanguage, setSelectedLanguage] = useState(
-    { id: 1, name: 'json' }
-  )
+  const [showDiffEditor, setShowDiffEditor] = useState(false);
 
-  const editorRef = useRef(null);
+  const [diffConfig, setDiffConfig] = useState({
+    diffMode: diffModes[0],
+    language: defaultLanguage,
+  });
 
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
-  }
+  const [selectedDiffMode, setSelectedDiffMode] = useState(diffModes[0]);
 
-  const handleSwap= () => {
-    console.log("Swap Button On Clicked", diffObj);
-    setCode({
-      left: diffObj.right,
-      right: diffObj.left,
+  const handleShowDiff = () => {
+    setShowDiffEditor((prev) => !prev);
+    setDiffObj({
+      left: leftInput,
+      right: rightInput,
     });
-  }
-
-  const handleClearAll = () => {
-    console.log("Clear All Button On Clicked", diffObj);
-    setCode({
-      left: "",
-      right: "",
-    });
-  }
+  };
 
   const handleClipboard = async (panel) => {
-    const text = await navigator.clipboard.readText();
-    console.log("Clipboard Button On Clicked", text);
-    switch(panel) {
+    const textInput = await navigator.clipboard.readText();
+
+    switch (panel) {
       case PANEL.LEFT:
-        setCode({ ...diffObj, left: text });
+        setLeftInput(textInput);
         break;
       case PANEL.RIGHT:
-        setCode({ ...diffObj, right: text });
+        setRightInput(textInput);
         break;
       default:
         break;
     }
-  }
+  };
 
   const handleClear = (panel) => {
-    switch(panel) {
+    switch (panel) {
       case PANEL.LEFT:
-        setCode({ ...diffObj, left: "" });
+        setLeftInput("");
         break;
       case PANEL.RIGHT:
-        setCode({ ...diffObj, right: "" });
+        setRightInput("");
         break;
       default:
         break;
     }
-  }
+  };
+
+  const handleInputChange = (panel, value) => {
+    switch (panel) {
+      case PANEL.LEFT:
+        setLeftInput(value);
+        break;
+      case PANEL.RIGHT:
+        setRightInput(value);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
-    <div className="w-full flex flex-col h-70">
-      <div className="w-full mb-4 flex flex-row justify-between items-end">
-        <div className="flex flex-row gap-2">
-          <SelectMenu/>
-          <LanguageComboBox selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage}/>
+    <div className="w-full flex flex-col gap-4">
+      <div className="w-full flex flex-row justify-between items-end">
+        <div className="flex flex-row">
+          <DiffModeMenu selected={selectedDiffMode} setSelected={setSelectedDiffMode} diffModes={diffModes}/>
         </div>
-        <div className="flex flex-row gap-2">
-          <CustomButton handleOnClick={handleSwap}>Swap</CustomButton>
-          <CustomButton handleOnClick={handleClearAll}>Clear all</CustomButton>
-        </div>
-      </div>
-      <DiffEditor
-        height="70vh"
-        width="100%"
-        language={selectedLanguage.name}
-        theme="vs-dark"
-        onMount={handleEditorDidMount}
-        original={diffObj.left}
-        modified={diffObj.right}
-      />
-      <div className="w-full mt-4 flex flex-row justify-between items-center">
-        <div className="flex flex-row gap-2">
-          <CustomButton handleOnClick={() => handleClipboard(PANEL.LEFT)}>Clipboard</CustomButton>
-          <CustomButton handleOnClick={() => handleClear(PANEL.LEFT)}>Clear</CustomButton>
-        </div>
-        <div className="flex flex-row gap-2">
-          <CustomButton handleOnClick={() => handleClipboard(PANEL.RIGHT)}>Clipboard</CustomButton>
-          <CustomButton handleOnClick={() => handleClear(PANEL.RIGHT)}>Clear</CustomButton>
+        <div className="flex flex-row">
+          <CTAButton handleOnClick={() => handleShowDiff()}>
+            {showDiffEditor ? "Edit input" : "Show difference"}
+          </CTAButton>
         </div>
       </div>
+
+      {showDiffEditor ? (
+        <div className="w-full editorContainer">
+          <DiffEditor
+            className="w-full h-full border border-gray-200 shadow-md"
+            language={diffConfig.language.name}
+            theme="vs-light"
+            original={diffObj.left}
+            modified={diffObj.right}
+            options={{
+              renderSideBySide: selectedDiffMode.mode === DIFF_MODE.SIDE_BY_SIDE,
+              scrollbar: {
+                horizontalScrollbarSize: 8,
+                verticalScrollbarSize: 8,
+              },
+              readOnly: true,
+              diffWordWrap: "on",
+              scrollBeyondLastLine: false,
+            }}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-row w-full editorContainer">
+          <InputEditor
+            value={leftInput}
+            onChange={(value) => handleInputChange(PANEL.LEFT, value)}
+            handleClipboard={() => handleClipboard(PANEL.LEFT)}
+            handleClear={() => handleClear(PANEL.LEFT)}
+            language={diffConfig.language.name}
+            styling={{ justifyContent: "flex-start" }}
+          />
+          <div className="w-4"></div>
+          <InputEditor
+            value={rightInput}
+            onChange={(value) => handleInputChange(PANEL.RIGHT, value)}
+            handleClipboard={() => handleClipboard(PANEL.RIGHT)}
+            handleClear={() => handleClear(PANEL.RIGHT)}
+            language={diffConfig.language.name}
+            styling={{ justifyContent: "flex-end" }}
+          />
+        </div>
+      )}
     </div>
   );
 };
-
-const CustomButton = ({children, handleOnClick}) => {
-  return (
-    <button className="px-2.5 py-1 text-xs rounded text-white bg-[#1a1523] customBtn" onClick={handleOnClick}>
-      {children}
-    </button>
-  )
-}
 
 export default MonacoEditor;

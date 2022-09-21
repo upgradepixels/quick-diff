@@ -4,6 +4,7 @@ import { styled, keyframes } from "@stitches/react";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import { CaretDownIcon } from "@radix-ui/react-icons";
 import { violet, mauve, indigo, purple, blackA } from "@radix-ui/colors";
+import Image from "next/image";
 
 const enterFromRight = keyframes({
   from: { transform: "translateX(200px)", opacity: 0 },
@@ -57,11 +58,8 @@ const StyledList = styled(NavigationMenuPrimitive.List, {
   all: "unset",
   display: "flex",
   justifyContent: "center",
-  // backgroundColor: 'white',
   padding: 4,
-  // borderRadius: 6,
   listStyle: "none",
-  // boxShadow: `0 2px 10px ${blackA.blackA7}`,
 });
 
 const itemStyles = {
@@ -116,7 +114,6 @@ const StyledLink = styled(NavigationMenuPrimitive.Link, {
 const StyledContent = styled(NavigationMenuPrimitive.Content, {
   position: "absolute",
   top: 0,
-  // left: 0,
   right: 0,
   width: "100%",
   "@media only screen and (min-width: 600px)": { width: "auto" },
@@ -212,7 +209,7 @@ const ContentList = styled("ul", {
         "@media only screen and (min-width: 600px)": {
           width: 600,
           gridAutoFlow: "column",
-          gridTemplateRows: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(2, 1fr)",
         },
       },
     },
@@ -272,17 +269,15 @@ const ContentListItemCallout = React.forwardRef(
           padding: 25,
         }}
       >
-        <svg
-          aria-hidden
-          width="38"
-          height="38"
-          viewBox="0 0 25 25"
-          fill="white"
-        >
-          <path d="M12 25C7.58173 25 4 21.4183 4 17C4 12.5817 7.58173 9 12 9V25Z"></path>
-          <path d="M12 0H4V8H12V0Z"></path>
-          <path d="M17 8C19.2091 8 21 6.20914 21 4C21 1.79086 19.2091 0 17 0C14.7909 0 13 1.79086 13 4C13 6.20914 14.7909 8 17 8Z"></path>
-        </svg>
+        <div className="w-12 h-12 select-none">
+          <Image
+            src="/proxyman-logo.png"
+            alt="Proxyman logo"
+            layout="responsive"
+            width={100}
+            height={100}
+          />
+        </div>
         <LinkTitle
           css={{
             fontSize: 18,
@@ -310,11 +305,9 @@ const ContentListItemCallout = React.forwardRef(
 const ViewportPosition = styled("div", {
   position: "absolute",
   display: "flex",
-  // justifyContent: 'center',
   justifyContent: "flex-end",
   width: "100%",
   top: "100%",
-  // left: 0,
   right: 0,
   perspective: "2000px",
 });
@@ -336,7 +329,7 @@ export const RightNavigationMenu = () => {
                 href="https://proxyman.io/ios"
                 title="Built for beginner to expert"
               >
-                Facilitate how to intercept HTTP/HTTPS traffic from iOS to
+                Facilitate to intercept HTTP/HTTPS traffic from iOS and
                 Android Simulators/Devices.
               </ContentListItem>
               <ContentListItem
@@ -353,17 +346,20 @@ export const RightNavigationMenu = () => {
           <NavigationMenuTrigger>Tools</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ContentList layout="two">
+              <ContentListItem title="Toolbox Utility (coming soon)" href="/">
+                Must-have toolbox for encoding/decoding Base64, URL-Encoded,
+                etc.
+              </ContentListItem>
               <ContentListItem title="Prettify JSON (coming soon)" href="/">
                 Beautify/Minify JSON with a single click.
               </ContentListItem>
+              <ContentListItem title="Code Generator (coming soon)" href="/">
+                Automatically generate code to various libraries, e.g. Axios,
+                cURL, HTTPie, Python, etc
+              </ContentListItem>
+
               <ContentListItem title="JWT Debugger (coming soon)" href="/">
                 Paste a JWT and decode its header, payload, and signature.
-              </ContentListItem>
-              <ContentListItem title="Toolbox Utility (coming soon)" href="/">
-                Must-have toolbox for encoding/decoding Base64, URL-Encoded, etc.
-              </ContentListItem>
-              <ContentListItem title="Code Generator (coming soon)" href="/">
-                Automatically generate code to various libraries, e.g. Axios, cURL, HTTPie, Python, etc
               </ContentListItem>
             </ContentList>
           </NavigationMenuContent>
