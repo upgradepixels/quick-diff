@@ -4,6 +4,8 @@ import DiffModeMenu from "./DiffModeMenu";
 import InputEditor from "./InputEditor";
 import CTAButton from "../button/CTAButton";
 import { PANEL, DIFF_MODE, LANGUAGE } from "../../utils/Constants";
+import LanguageComboBox from "./LanguageComboBox";
+import { defaultLeft, defaultRight } from "./Utils";
 
 const diffModes = [
   { id: 1, mode: DIFF_MODE.SIDE_BY_SIDE },
@@ -15,19 +17,6 @@ const defaultLanguage = {
   name: LANGUAGE.JSON,
 }
 
-const defaultLeft = `{
-  "timestamp": "2022-09-11T11:35:44+07:00",
-  "event": "visit",
-  "page": "home"
-}`;
-
-const defaultRight = `{
-  "timestamp": "2022-09-22T09:40:44+07:00",
-  "event": "click on button",
-  "page": "user",
-  "id": "ABCD"
-}`;
-
 const MonacoEditor = () => {
   const [leftInput, setLeftInput] = useState(defaultLeft);
   const [rightInput, setRightInput] = useState(defaultRight);
@@ -38,7 +27,6 @@ const MonacoEditor = () => {
   });
 
   const [showDiffEditor, setShowDiffEditor] = useState(false);
-
   const [diffConfig, setDiffConfig] = useState({
     diffMode: diffModes[0],
     language: defaultLanguage,
@@ -95,15 +83,23 @@ const MonacoEditor = () => {
     }
   };
 
+  const languageComboBoxDidSelect = (newLanguage) => {
+    setDiffConfig({
+      ...diffConfig,
+      language: newLanguage
+    })
+  }
+
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="w-full flex flex-row justify-between items-end">
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-4 items-center">
+          <LanguageComboBox selectedLanguage={diffConfig.language} setSelectedLanguage={languageComboBoxDidSelect}></LanguageComboBox>
           <DiffModeMenu selected={selectedDiffMode} setSelected={setSelectedDiffMode} diffModes={diffModes}/>
         </div>
         <div className="flex flex-row">
           <CTAButton handleOnClick={() => handleShowDiff()}>
-            {showDiffEditor ? "Edit input" : "Show difference"}
+            {showDiffEditor ? "Edit Input" : "Show Diff"}
           </CTAButton>
         </div>
       </div>
@@ -129,7 +125,7 @@ const MonacoEditor = () => {
           />
         </div>
       ) : (
-        <div className="flex flex-row w-full editorContainer">
+        <div className="flex flex-col md:flex-row w-full editorContainer">
           <InputEditor
             value={leftInput}
             onChange={(value) => handleInputChange(PANEL.LEFT, value)}
@@ -138,7 +134,7 @@ const MonacoEditor = () => {
             language={diffConfig.language.name}
             styling={{ justifyContent: "flex-start" }}
           />
-          <div className="w-4"></div>
+          <div className="w-4 my-2 md:my-0"></div>
           <InputEditor
             value={rightInput}
             onChange={(value) => handleInputChange(PANEL.RIGHT, value)}

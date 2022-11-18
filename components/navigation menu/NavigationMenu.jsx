@@ -4,19 +4,24 @@ import RightNavigationMenu from "./RightNavigationMenu";
 
 const NavigationMenu = () => {
   return (
-    <div className="pt-4 pb-10 h-20 flex flex-row justify-between items-center">
-      <div className="flex flex-row gap-2">
-        <div className="w-8 h-8">
-          <Image
-            src="/favicon_io/android-chrome-192x192.png"
-            alt="Quick Diff logo"
-            width={32}
-            height={32}
-          />
-        </div>
-        <div className="text-3xl text-[#1a1523] font-bold">
-          Quick
-          <span className="highlightText">Diff</span>
+    <div className="pt-10 pb-12 h-20 flex flex-row justify-between items-center mb-2">
+      <div className="">
+        <div className="flex flex-col">
+          <div className="text-4xl text-[#1a1523] font-bold">
+            Quick
+            <span className="highlightText">Diff</span>
+          </div>
+          <div>
+            Built by{" "}
+            <a
+              className="logo-highlightText hover:text-indigo-800 hover:underline cursor-pointer"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://proxyman.io"
+            >
+              Proxyman
+            </a>
+          </div>
         </div>
       </div>
       <RightNavigationMenu />
